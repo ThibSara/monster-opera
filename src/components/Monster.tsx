@@ -14,6 +14,18 @@ const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
     const monster = splineApp.findObjectByName("Monster");
     if (monster) {
       monsterRef.current = monster;
+
+      splineApp.addEventListener("mouseDown", (e: any) => {
+        if (e.target.name === "Monster") {
+          setIsSinging(true);
+        }
+      });
+
+      splineApp.addEventListener("mouseUp", (e: any) => {
+        if (e.target.name === "Monster") {
+          setIsSinging(false);
+        }
+      });
     }
 
     setIsLoaded(true);
@@ -32,6 +44,8 @@ const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
   const walkingAnimation = () => {
     if (monsterRef.current) {
       splineRef.current.emitEvent("keyDown", "Monster");
+      //monsterRef.current.rotation.y = 200;
+      //monsterRef.current.position.x = 20;
     }
   };
 
