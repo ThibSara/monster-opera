@@ -1,81 +1,65 @@
 "use client";
+
 import { useRef, useState } from "react";
 import Spline from "@splinetool/react-spline";
-import { Howl } from "howler";
+import * as Tone from "tone";
 
 const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
+  // Références pour Spline et l'objet Monster
   const splineRef = useRef<any>(null);
   const monsterRef = useRef<any>(null);
+
+  // États
   const [isSinging, setIsSinging] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const singingSound = useRef(
-    new Howl({
-      src: ["/bells.mp3"],
-    })
-  );
+  // Synthétiseur pour le son
+  const synthRef = useRef(new Tone.Synth().toDestination());
 
-  const startSinging = () => {
+  // Fonctions de gestion du son
+  const startSinging = async () => {
     if (!isSinging) {
-      singingSound.current.play();
+      await Tone.start();
+      synthRef.current.triggerAttack("C4");
       setIsSinging(true);
     }
   };
 
   const stopSinging = () => {
-    singingSound.current.stop();
+    synthRef.current.triggerRelease();
     setIsSinging(false);
   };
 
+  // Gestion du chargement de Spline
   const handleLoad = (splineApp: any) => {
     splineRef.current = splineApp;
-
     const monster = splineApp.findObjectByName("Monster");
+
     if (monster) {
       monsterRef.current = monster;
 
+      // Événements de clic pour chanter
       splineApp.addEventListener("mouseDown", (e: any) => {
-        if (e.target.name === "Monster") {
-          startSinging();
-        }
+        if (e.target.name === "Monster") startSinging();
       });
 
       splineApp.addEventListener("mouseUp", (e: any) => {
-        if (e.target.name === "Monster") {
-          stopSinging();
-        }
+        if (e.target.name === "Monster") stopSinging();
       });
     }
 
     setIsLoaded(true);
-
-    if (onLoad) {
-      onLoad(splineApp);
-    }
+    onLoad?.(splineApp);
   };
 
-  const removeMonster = () => {
-    if (monsterRef.current) {
-      splineRef.current.emitEvent("keyUp", "Monster");
-    }
-  };
-
-  const walkingAnimation = () => {
-    if (monsterRef.current) {
-      splineRef.current.emitEvent("keyDown", "Monster");
-    }
-  };
-
+  // Gestion du chant via bouton
   const toggleSingingMonster = () => {
     if (monsterRef.current) {
-      if (isSinging) {
-        splineRef.current.emitEvent("mouseUp", "Monster");
-        stopSinging;
-      } else {
-        splineRef.current.emitEvent("mouseDown", "Monster");
-        startSinging();
-      }
-      setIsSinging(!isSinging);
+      isSinging ? stopSinging() : startSinging();
+      splineRef.current.emitEvent(
+        isSinging ? "mouseUp" : "mouseDown",
+        "Monster"
+      );
     }
   };
 
@@ -94,20 +78,6 @@ const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
           disabled={!isLoaded}
         >
           {isSinging ? "🔇 Stop Singing" : "🎤 Sing"}
-        </button>
-        <button
-          onClick={removeMonster}
-          className="mx-4 p-4 bg-purple-500 rounded-sm text-white mt-4"
-          disabled={!isLoaded}
-        >
-          Remove Monster
-        </button>
-        <button
-          onClick={walkingAnimation}
-          className="mx-4 p-4 bg-purple-500 rounded-sm text-white mt-4"
-          disabled={!isLoaded}
-        >
-          Walking Animation
         </button>
       </div>
     </div>
