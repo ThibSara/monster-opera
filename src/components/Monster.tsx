@@ -1,12 +1,31 @@
 "use client";
 import { useRef, useState } from "react";
 import Spline from "@splinetool/react-spline";
+import { Howl } from "howler";
 
 const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
   const splineRef = useRef<any>(null);
   const monsterRef = useRef<any>(null);
   const [isSinging, setIsSinging] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const singingSound = useRef(
+    new Howl({
+      src: ["/bells.mp3"],
+    })
+  );
+
+  const startSinging = () => {
+    if (!isSinging) {
+      singingSound.current.play();
+      setIsSinging(true);
+    }
+  };
+
+  const stopSinging = () => {
+    singingSound.current.stop();
+    setIsSinging(false);
+  };
 
   const handleLoad = (splineApp: any) => {
     splineRef.current = splineApp;
@@ -17,13 +36,13 @@ const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
 
       splineApp.addEventListener("mouseDown", (e: any) => {
         if (e.target.name === "Monster") {
-          setIsSinging(true);
+          startSinging();
         }
       });
 
       splineApp.addEventListener("mouseUp", (e: any) => {
         if (e.target.name === "Monster") {
-          setIsSinging(false);
+          stopSinging();
         }
       });
     }
@@ -44,8 +63,6 @@ const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
   const walkingAnimation = () => {
     if (monsterRef.current) {
       splineRef.current.emitEvent("keyDown", "Monster");
-      //monsterRef.current.rotation.y = 200;
-      //monsterRef.current.position.x = 20;
     }
   };
 
@@ -53,8 +70,10 @@ const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
     if (monsterRef.current) {
       if (isSinging) {
         splineRef.current.emitEvent("mouseUp", "Monster");
+        stopSinging;
       } else {
         splineRef.current.emitEvent("mouseDown", "Monster");
+        startSinging();
       }
       setIsSinging(!isSinging);
     }
