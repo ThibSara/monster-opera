@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${mona_Sans.variable} antialiased font-sans bg-white`}>
+      <body className={`${mona_Sans.variable} antialiased font-sans`}>
         {children}
       </body>
     </html>

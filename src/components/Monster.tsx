@@ -3,8 +3,17 @@
 import { useRef, useState } from "react";
 import Spline from "@splinetool/react-spline";
 import * as Tone from "tone";
+import { PlayIcon } from "@heroicons/react/24/solid";
 
-const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
+const Monster = ({
+  splineScene,
+  color,
+  onLoad,
+}: {
+  splineScene: string;
+  color: string;
+  onLoad?: (splineApp: any) => void;
+}) => {
   const splineRef = useRef<any>(null);
   const monsterRef = useRef<any>(null);
   const [isSinging, setIsSinging] = useState(false);
@@ -53,14 +62,14 @@ const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
   return (
     <div className="flex flex-col items-center justify-center">
       {/* Arc de cercle + base carrée */}
-      <div className="relative w-[300px] h-[400px] flex items-center justify-center">
+      <div className="relative w-[340px] h-[400px] flex items-center justify-center">
         {/* Arc de cercle */}
-        <div className="absolute top-0 w-full h-[200px] bg-purple-700 rounded-t-full" />
+        <div className="absolute top-0 w-full h-[200px] bg-[#C4D6B2] rounded-t-full" />
         {/* Base carrée */}
-        <div className="absolute bottom-0 w-full h-[200px] bg-purple-700 rounded-b-lg shadow-lg" />
+        <div className="absolute bottom-0 w-full h-[200px] bg-[#C4D6B2] rounded-b-lg shadow-lg" />
 
         {/* Spline intégré */}
-        <div className="absolute w-[250px] h-[250px]">
+        <div className="absolute bottom-0 w-[280px] h-[350px]">
           <Spline
             scene="https://prod.spline.design/23hMdeQMRSlQ3qpj/scene.splinecode"
             onLoad={handleLoad}
@@ -68,17 +77,17 @@ const Monster = ({ onLoad }: { onLoad?: (splineApp: any) => void }) => {
         </div>
       </div>
 
-      {/*  
       <button
         onClick={toggleSingingMonster}
-        className={`mt-6 px-6 py-3 rounded-full text-white font-bold transition-transform duration-200 transform hover:scale-105 shadow-md ${
-          isSinging ? "bg-red-500" : "bg-purple-500"
-        }`}
+        className={`mt-6 px-3 py-3 rounded-full flex ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-transform duration-200 transform hover:scale-105 items-center justify-center`}
         disabled={!isLoaded}
       >
-        {isSinging ? "🔇 Stop Singing" : "🎤 Sing"}
+        <PlayIcon
+          className={`w-6 h-6  ${
+            isSinging ? "text-green-500" : "text-gray-300"
+          }`}
+        />
       </button>
-      */}
     </div>
   );
 };

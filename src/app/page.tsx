@@ -3,7 +3,7 @@ import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
   return (
-    <div className="text-white">
+    <div>
       <HeroSection />
       <StepSequencer />
     </div>
