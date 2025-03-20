@@ -1,89 +1,103 @@
-"use client"
-import React, { useState } from 'react';
-import "./style.css"
+"use client";
+import React, { useState } from "react";
+import * as Tone from "tone";
 
 const StepSequencer = () => {
   const [bpm, setBpm] = useState(100);
-  const [sequence, setSequence] = useState({
-    kick: Array(16).fill(false),
-    snare: Array(16).fill(false),
-    hihat: Array(16).fill(false),
-    clap: Array(16).fill(false),
-    shake: Array(16).fill(false),
-    fing: Array(16).fill(false),
-    rim: Array(16).fill(false),
-    tom: Array(16).fill(false),
-  });
+  const [kickSequence, setKickSequence] = useState(Array(16).fill(false));
+  const [snareSequence, setSnareSequence] = useState(Array(16).fill(false));
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
 
-  const toggleBeat = (instrument: string, index: number) => {
-    setSequence((prevSequence) => {
-      return {
-        ...prevSequence,
-        [instrument]: prevSequence[instrument].map((beat, i) =>
-          i === index ? !beat : beat
-        ),
-      };
-    });
+  // Synthétiseurs
+  const kick = new Tone.MembraneSynth().toDestination();
+  const snare = new Tone.NoiseSynth({ volume: -10 }).toDestination();
+
+  // Fonction pour activer/désactiver une case de la séquence
+  const toggleBeat = (
+    sequenceSetter: React.Dispatch<React.SetStateAction<boolean[]>>,
+    index: number
+  ) => {
+    sequenceSetter((prevSequence) =>
+      prevSequence.map((beat, i) => (i === index ? !beat : beat))
+    );
   };
 
-  const changeBpm = (increment: boolean) => {
-    setBpm((prevBpm) => (increment ? prevBpm + 10 : prevBpm - 10));
+  // Fonction pour démarrer la séquence
+  const startSequencer = async () => {
+    await Tone.start();
+    Tone.Transport.bpm.value = bpm;
+
+    let step = 0;
+
+    Tone.Transport.scheduleRepeat((time) => {
+      setCurrentStep(step);
+
+      if (kickSequence[step]) {
+        kick.triggerAttackRelease("C1", "8n", time);
+      }
+      if (snareSequence[step]) {
+        snare.triggerAttackRelease("16n", time);
+      }
+
+      step = (step + 1) % 16;
+    }, "16n");
+
+    Tone.Transport.start();
+    setIsPlaying(true);
   };
 
-  const renderBeats = (instrument: string) => {
-    return sequence[instrument].map((beat, index) => (
-      <button
-        key={`${instrument}-${index}`}
-        onClick={() => toggleBeat(instrument, index)}
-        className={`w-12 h-12 mx-1 my-1 rounded-lg shadow-md transition-transform transition-color duration-200  ${
-          beat ? "bg-blue-500 inset-shadow-blue-100 border-blue-700" : "bg-[#36363c] border-gray-600" 
-        } hover:border-white hover:scale-105`}
-      />
-    ));
+  // Fonction pour arrêter la séquence
+  const stopSequencer = () => {
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+    setIsPlaying(false);
+    setCurrentStep(0);
   };
-  
 
   return (
-    <div style={{ fontFamily: 'Quicksand, sans-serif', textAlign: 'center', color: 'white', backgroundColor: '#28282c' }}>
-      <p style={{ position: 'absolute', top: '0px', right: '10px', fontSize: '12px', fontWeight: 'bold', letterSpacing: '1px' }}>
-        <a href="http://portfolio.planetcode.fr/" target="_blank" title="Samples et programmation par Jean-Eudes Nouaille-Degorce" style={{ textDecoration: 'none', color: 'grey' }}>
-          planetcode.fr
-        </a>
-      </p>
+    <div className="bg-[#28282c] p-10 text-white text-center">
+      <h1 className="text-xl mb-4">Step Sequencer</h1>
 
-      <section className="sequencer">
+      {/* KICK ROW */}
+      <p className="text-lg mb-2">KICK</p>
+      <div className="flex justify-center space-x-2">
+        {kickSequence.map((beat, index) => (
+          <button
+            key={`kick-${index}`}
+            onClick={() => toggleBeat(setKickSequence, index)}
+            className={`w-10 h-10 rounded-md border-2 transition ${
+              beat
+                ? "bg-blue-500 border-blue-700"
+                : "bg-gray-700 border-gray-500"
+            } ${index === currentStep ? "border-white scale-105" : ""}`}
+          />
+        ))}
+      </div>
 
-        <div className="drums">
-          {/* Labels */}
-          <div className="label-box-1">
-            {['Kick', 'Snare', 'Hihat', 'Clap', 'Shake', 'Fing', 'Rim', 'Tom'].map((label) => (
-              <p key={label} className="labels">{label}</p>
-            ))}
-          </div>
+      {/* SNARE ROW */}
+      <p className="text-lg mt-4 mb-2">SNARE</p>
+      <div className="flex justify-center space-x-2">
+        {snareSequence.map((beat, index) => (
+          <button
+            key={`snare-${index}`}
+            onClick={() => toggleBeat(setSnareSequence, index)}
+            className={`w-10 h-10 rounded-md border-2 transition ${
+              beat ? "bg-red-500 border-red-700" : "bg-gray-700 border-gray-500"
+            } ${index === currentStep ? "border-white scale-105" : ""}`}
+          />
+        ))}
+      </div>
 
-          {/* Drums */}
-          {['kick', 'snare', 'hihat', 'clap', 'shake', 'fing', 'rim', 'tom'].map((instrument) => (
-            <div key={instrument} className={instrument}>
-              {renderBeats(instrument)}
-            </div>
-          ))}
-        </div>
-
-        <button className="control-button" onClick={() => {}}>PLAY</button>
-        <button className="control-button" onClick={() => {}}>STOP</button>
-
-        <input
-          type="text"
-          id="change_bpm"
-          placeholder={bpm.toString()}
-          className="control-bpm"
-          value={bpm}
-          onChange={(e) => setBpm(Number(e.target.value))}
-        />
-
-        <button className="control-button" onClick={() => changeBpm(true)}>BPM+</button>
-        <button className="control-button" onClick={() => changeBpm(false)}>BPM-</button>
-      </section>
+      {/* CONTROLS */}
+      <div className="mt-6">
+        <button
+          className="bg-green-500 px-4 py-2 rounded-md mr-4"
+          onClick={isPlaying ? stopSequencer : startSequencer}
+        >
+          {isPlaying ? "STOP" : "PLAY"}
+        </button>
+      </div>
     </div>
   );
 };
