@@ -151,7 +151,7 @@ const StepSequencer = () => {
           >
             <PlayIcon
               className={`w-6 h-6 ${
-                isPlaying ? "text-green-500" : "text-gray-300"
+                isPlaying ? "text-gray-500" : "text-gray-300"
               }`}
             />
           </button>
@@ -190,7 +190,7 @@ const StepSequencer = () => {
             max="200"
             value={bpm}
             onChange={(e) => setBpm(parseInt(e.target.value))}
-            className="w-24 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-green-500"
+            className="w-24 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-[#9198EE]"
           />
           <div className="relative w-[80px] text-center rounded-full px-2 py-1 text-xs text-gray-600 ring-1 ring-gray-900/10">
             {bpm} BPM

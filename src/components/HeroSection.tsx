@@ -30,9 +30,21 @@ export default function Example() {
       <div className="min-h-[calc(100vh-48px)]  relative isolate flex flex-col justify-center px-8 lg:px-12 mt-12">
         {/* Monsters Section */}
         <div className="flex flex-row justify-center justify-between items-center space-x-6">
-          <Monster color="#" splineScene="aa" />
-          <Monster color="#" splineScene="aa" />
-          <Monster color="#" splineScene="aa" />
+          <Monster
+            primaryColor="#C4D6B2"
+            secondaryColor="#80AF93"
+            splineScene="aa"
+          />
+          <Monster
+            primaryColor="#C3ACE7"
+            secondaryColor="#9198EE"
+            splineScene="aa"
+          />
+          <Monster
+            primaryColor="#EFC3B5"
+            secondaryColor="#F19DD3"
+            splineScene="aa"
+          />
         </div>
 
         {/* Announcement Section */}

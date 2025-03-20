@@ -7,11 +7,13 @@ import { PlayIcon } from "@heroicons/react/24/solid";
 
 const Monster = ({
   splineScene,
-  color,
+  primaryColor,
+  secondaryColor,
   onLoad,
 }: {
   splineScene: string;
-  color: string;
+  primaryColor: string;
+  secondaryColor: string;
   onLoad?: (splineApp: any) => void;
 }) => {
   const splineRef = useRef<any>(null);
@@ -60,16 +62,16 @@ const Monster = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      {/* Arc de cercle + base carrée */}
-      <div className="relative w-[340px] h-[400px] flex items-center justify-center">
-        {/* Arc de cercle */}
-        <div className="absolute top-0 w-full h-[200px] bg-[#C4D6B2] rounded-t-full" />
-        {/* Base carrée */}
-        <div className="absolute bottom-0 w-full h-[200px] bg-[#C4D6B2] rounded-b-lg shadow-lg" />
-
+    <div className="relative flex flex-col items-center justify-center">
+      {/* Conteneur avec un dégradé fluide */}
+      <div
+        className="relative w-[300px] h-[400px] rounded-t-full rounded-b-lg shadow-lg overflow-hidden"
+        style={{
+          background: `linear-gradient(to bottom, ${primaryColor}AA,${secondaryColor}DD , ${primaryColor})`,
+        }}
+      >
         {/* Spline intégré */}
-        <div className="absolute bottom-0 w-[280px] h-[350px]">
+        <div className="absolute bottom-0 w-[300px] h-[350px]">
           <Spline
             scene="https://prod.spline.design/23hMdeQMRSlQ3qpj/scene.splinecode"
             onLoad={handleLoad}
@@ -84,7 +86,7 @@ const Monster = ({
       >
         <PlayIcon
           className={`w-6 h-6  ${
-            isSinging ? "text-green-500" : "text-gray-300"
+            isSinging ? "text-gray-500" : "text-gray-300"
           }`}
         />
       </button>
