@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Mona_Sans } from "next/font/google";
 import "./globals.css";
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+const mona_Sans = Mona_Sans({
   subsets: ["latin"],
+  variable: "--font-mona-sans",
 });
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} antialiased bg-white`}>
+      <body className={`${mona_Sans.variable} antialiased font-sans bg-white`}>
         {children}
       </body>
     </html>
