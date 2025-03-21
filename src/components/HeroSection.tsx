@@ -53,7 +53,7 @@ export default function Example() {
         {/* Announcement Section */}
         <div className="mt-16 flex justify-center flex-col items-center space-y-4">
           <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-            Make your music and share it with your friends !{" "}
+            Have fun making your own music !{" "}
           </div>
         </div>
       </div>

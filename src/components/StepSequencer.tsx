@@ -6,22 +6,39 @@ import { PlayIcon, SparklesIcon, TrashIcon } from "@heroicons/react/24/solid";
 const StepSequencer = () => {
   const [bpm, setBpm] = useState(100);
   const [kickSequence, setKickSequence] = useState(Array(16).fill(false));
-  const [snareSequence, setSnareSequence] = useState(Array(16).fill(false));
-  const [tomSequence, setTomSequence] = useState(Array(16).fill(false));
-  const [hihatSequence, setHihatSequence] = useState(Array(16).fill(false));
+  const [maracasSequence, setmaracasSequence] = useState(Array(16).fill(false));
+  const [pianoSequence, setpianoSequence] = useState(Array(16).fill(false));
+  const [trumpetSequence, settrumpetSequence] = useState(Array(16).fill(false));
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
   const kickRef = useRef<Tone.MembraneSynth | null>(null);
-  const snareRef = useRef<Tone.NoiseSynth | null>(null);
-  const tomRef = useRef<Tone.MembraneSynth | null>(null);
-  const hihatRef = useRef<Tone.MembraneSynth | null>(null);
+  const maracasRef = useRef<Tone.NoiseSynth | null>(null);
+  const pianoRef = useRef<Tone.PolySynth | null>(null);
+  const trumpetRef = useRef<Tone.Synth | null>(null);
 
   useEffect(() => {
-    kickRef.current = new Tone.MembraneSynth().toDestination();
-    snareRef.current = new Tone.NoiseSynth({ volume: -10 }).toDestination();
-    tomRef.current = new Tone.MembraneSynth().toDestination();
-    hihatRef.current = new Tone.MembraneSynth().toDestination();
+    kickRef.current = new Tone.MembraneSynth({
+      pitchDecay: 0.05,
+      octaves: 2,
+      oscillator: { type: "sine" },
+      envelope: { attack: 0.005, decay: 0.2, sustain: 0, release: 0.15 },
+    }).toDestination();
+
+    maracasRef.current = new Tone.NoiseSynth({
+      noise: { type: "white" },
+      envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.02 },
+    }).toDestination();
+    const highpass = new Tone.Filter(7000, "highpass").toDestination();
+    maracasRef.current.connect(highpass);
+
+    pianoRef.current = new Tone.PolySynth(Tone.Synth, {
+      oscillator: { type: "triangle" },
+      envelope: { attack: 0.02, decay: 0.2, sustain: 0.5, release: 0.5 },
+    }).toDestination();
+    pianoRef.current.volume.value = -3;
+
+    trumpetRef.current = new Tone.Synth({}).toDestination();
   }, []);
 
   const toggleBeat = (
@@ -42,13 +59,13 @@ const StepSequencer = () => {
       setCurrentStep(step);
 
       if (kickSequence[step] && kickRef.current)
-        kickRef.current.triggerAttackRelease("C1", "8n", time);
-      if (snareSequence[step] && snareRef.current)
-        snareRef.current.triggerAttackRelease("16n", time);
-      if (tomSequence[step] && tomRef.current)
-        tomRef.current.triggerAttackRelease("C2", "8n", time);
-      if (hihatSequence[step] && hihatRef.current)
-        hihatRef.current.triggerAttackRelease("C3", "8n", time);
+        kickRef.current.triggerAttackRelease("C2", "8n", time);
+      if (maracasSequence[step] && maracasRef.current)
+        maracasRef.current.triggerAttackRelease("16n", time);
+      if (pianoSequence[step] && pianoRef.current)
+        pianoRef.current.triggerAttackRelease(["C4"], "8n", time);
+      if (trumpetSequence[step] && trumpetRef.current)
+        trumpetRef.current.triggerAttackRelease("G4", "8n", time);
 
       step = (step + 1) % 16;
     }, "16n");
@@ -99,17 +116,17 @@ const StepSequencer = () => {
       </div>
 
       <div className="flex items-center justify-between w-full">
-        <div className="text-3xl bg-orange-400 w-12 h-12 rounded-lg flex items-center justify-center shadow-md">
-          🪇
+        <div className="text-3xl bg-purple-500  w-12 h-12 rounded-lg flex items-center justify-center shadow-md">
+          🎹
         </div>
         <div className="flex justify-center space-x-2">
-          {tomSequence.map((beat, index) => (
+          {pianoSequence.map((beat, index) => (
             <button
-              key={`tom-${index}`}
-              onClick={() => toggleBeat(setTomSequence, index)}
+              key={`piano-${index}`}
+              onClick={() => toggleBeat(setpianoSequence, index)}
               className={`w-10 h-10 rounded-md transition hover:scale-110 ${
                 beat
-                  ? "bg-orange-400 shadow-lg shadow-orange-500/50"
+                  ? "bg-purple-400 shadow-lg shadow-purple-500/50"
                   : "bg-gray-200"
               } ${index === currentStep ? "scale-110" : ""}`}
             />
@@ -118,17 +135,17 @@ const StepSequencer = () => {
       </div>
 
       <div className="flex items-center justify-between w-full">
-        <div className="text-2xl bg-purple-500 w-12 h-12 rounded-lg flex items-center justify-center shadow-md">
-          🎹
+        <div className="text-2xl bg-orange-400 w-12 h-12 rounded-lg flex items-center justify-center shadow-md">
+          🪇
         </div>
         <div className="flex justify-center space-x-2">
-          {snareSequence.map((beat, index) => (
+          {maracasSequence.map((beat, index) => (
             <button
-              key={`snare-${index}`}
-              onClick={() => toggleBeat(setSnareSequence, index)}
+              key={`maracas-${index}`}
+              onClick={() => toggleBeat(setmaracasSequence, index)}
               className={`w-10 h-10 rounded-md transition hover:scale-110 ${
                 beat
-                  ? "bg-purple-500 shadow-lg shadow-purple-500/50"
+                  ? "bg-orange-400 shadow-lg shadow-orange-500/50"
                   : "bg-gray-200"
               } ${index === currentStep ? "scale-110" : ""}`}
             />
@@ -141,10 +158,10 @@ const StepSequencer = () => {
           🎺
         </div>
         <div className="flex justify-center space-x-2">
-          {hihatSequence.map((beat, index) => (
+          {trumpetSequence.map((beat, index) => (
             <button
               key={`hithat-${index}`}
-              onClick={() => toggleBeat(setHihatSequence, index)}
+              onClick={() => toggleBeat(settrumpetSequence, index)}
               className={`w-10 h-10 rounded-md transition hover:scale-110 ${
                 beat
                   ? "bg-teal-400 shadow-lg shadow-teal-500/50"
@@ -171,9 +188,9 @@ const StepSequencer = () => {
             onClick={() => {
               stopSequencer();
               randomizeSequence(setKickSequence);
-              randomizeSequence(setTomSequence);
-              randomizeSequence(setSnareSequence);
-              randomizeSequence(setHihatSequence);
+              randomizeSequence(setpianoSequence);
+              randomizeSequence(setmaracasSequence);
+              randomizeSequence(settrumpetSequence);
             }}
             className={`px-3 py-3 rounded-full flex ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-transform duration-200 transform hover:scale-105 items-center justify-center`}
           >
@@ -186,9 +203,9 @@ const StepSequencer = () => {
             onClick={() => {
               stopSequencer();
               clearSequence(setKickSequence);
-              clearSequence(setTomSequence);
-              clearSequence(setSnareSequence);
-              clearSequence(setHihatSequence);
+              clearSequence(setpianoSequence);
+              clearSequence(setmaracasSequence);
+              clearSequence(settrumpetSequence);
             }}
             className={`px-3 py-3 rounded-full flex ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-transform duration-200 transform hover:scale-105 items-center justify-center`}
           >
