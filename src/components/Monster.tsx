@@ -1,7 +1,24 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import Spline from "@splinetool/react-spline";
 import * as Tone from "tone";
 import { PlayIcon, UserIcon } from "@heroicons/react/24/solid";
+
+interface SplineApp {
+  findObjectByName: (name: string) => SplineObject | undefined;
+  addEventListener: (
+    event: "mouseDown" | "mouseUp",
+    callback: (e: SplineMouseEvent) => void
+  ) => void;
+  emitEvent: (event: "mouseDown" | "mouseUp", target: string) => void;
+}
+
+interface SplineObject {
+  name: string;
+}
+
+interface SplineMouseEvent {
+  target?: SplineObject;
+}
 
 const MonstersData = [
   {
@@ -34,11 +51,26 @@ const MonstersData = [
     splineScene: "https://prod.spline.design/23hMdeQMRSlQ3qpj/scene.splinecode",
     note: "A3",
   },
+  {
+    name: "pink",
+    splineScene: "https://prod.spline.design/Th0IJT7LnEKBq2Md/scene.splinecode",
+    note: "B3",
+  },
 ];
 
-const Monster = ({ primaryColor, secondaryColor, tertiaryColor, name }) => {
-  const splineRef = useRef(null);
-  const monsterRef = useRef(null);
+const Monster = ({
+  primaryColor,
+  secondaryColor,
+  tertiaryColor,
+  name,
+}: {
+  primaryColor: string;
+  secondaryColor: string;
+  tertiaryColor: string;
+  name: string;
+}) => {
+  const splineRef = useRef<SplineApp | null>(null);
+  const monsterRef = useRef<SplineObject | null>(null);
   const [isSinging, setIsSinging] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentMonsterIndex, setCurrentMonsterIndex] = useState(
@@ -64,32 +96,41 @@ const Monster = ({ primaryColor, secondaryColor, tertiaryColor, name }) => {
     setIsSinging(false);
   };
 
-  const handleLoad = (splineApp) => {
+  const handleLoad = (splineApp: SplineApp) => {
+    if (!splineApp) return;
+
     splineRef.current = splineApp;
+
     const monster = splineApp.findObjectByName("Monster");
     if (monster) {
       monsterRef.current = monster;
-      splineApp.addEventListener("mouseDown", (e) => {
-        if (e.target.name === "Monster") startSinging();
+
+      splineApp.addEventListener("mouseDown", (e: SplineMouseEvent) => {
+        if (e.target?.name === "Monster") startSinging();
       });
-      splineApp.addEventListener("mouseUp", (e) => {
-        if (e.target.name === "Monster") stopSinging();
+
+      splineApp.addEventListener("mouseUp", (e: SplineMouseEvent) => {
+        if (e.target?.name === "Monster") stopSinging();
       });
     }
+
     setIsLoaded(true);
   };
 
   const toggleSingingMonster = () => {
     if (monsterRef.current) {
-      isSinging ? stopSinging() : startSinging();
-      splineRef.current.emitEvent(
-        isSinging ? "mouseUp" : "mouseDown",
-        "Monster"
-      );
+      if (isSinging) {
+        stopSinging();
+        splineRef.current?.emitEvent("mouseUp", "Monster");
+      } else {
+        startSinging();
+        splineRef.current?.emitEvent("mouseDown", "Monster");
+      }
     }
   };
 
   const changeScene = () => {
+    stopSinging();
     setCurrentMonsterIndex(
       (prevIndex) => (prevIndex + 1) % MonstersData.length
     );
