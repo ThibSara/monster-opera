@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as Tone from "tone";
 import { PlayIcon, SparklesIcon, TrashIcon } from "@heroicons/react/24/solid";
 
@@ -9,14 +9,20 @@ const StepSequencer = () => {
   const [snareSequence, setSnareSequence] = useState(Array(16).fill(false));
   const [tomSequence, setTomSequence] = useState(Array(16).fill(false));
   const [hihatSequence, setHihatSequence] = useState(Array(16).fill(false));
-
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const kick = new Tone.MembraneSynth().toDestination();
-  const snare = new Tone.NoiseSynth({ volume: -10 }).toDestination();
-  const tom = new Tone.MembraneSynth().toDestination();
-  const hithat = new Tone.MembraneSynth().toDestination();
+  const kickRef = useRef<Tone.MembraneSynth | null>(null);
+  const snareRef = useRef<Tone.NoiseSynth | null>(null);
+  const tomRef = useRef<Tone.MembraneSynth | null>(null);
+  const hihatRef = useRef<Tone.MembraneSynth | null>(null);
+
+  useEffect(() => {
+    kickRef.current = new Tone.MembraneSynth().toDestination();
+    snareRef.current = new Tone.NoiseSynth({ volume: -10 }).toDestination();
+    tomRef.current = new Tone.MembraneSynth().toDestination();
+    hihatRef.current = new Tone.MembraneSynth().toDestination();
+  }, []);
 
   const toggleBeat = (
     sequenceSetter: React.Dispatch<React.SetStateAction<boolean[]>>,
@@ -34,10 +40,16 @@ const StepSequencer = () => {
 
     Tone.Transport.scheduleRepeat((time) => {
       setCurrentStep(step);
-      if (kickSequence[step]) kick.triggerAttackRelease("C1", "8n", time);
-      if (snareSequence[step]) snare.triggerAttackRelease("16n", time);
-      if (tomSequence[step]) tom.triggerAttackRelease("C2", "8n", time);
-      if (hihatSequence[step]) hithat.triggerAttackRelease("C3", "8n", time);
+
+      if (kickSequence[step] && kickRef.current)
+        kickRef.current.triggerAttackRelease("C1", "8n", time);
+      if (snareSequence[step] && snareRef.current)
+        snareRef.current.triggerAttackRelease("16n", time);
+      if (tomSequence[step] && tomRef.current)
+        tomRef.current.triggerAttackRelease("C2", "8n", time);
+      if (hihatSequence[step] && hihatRef.current)
+        hihatRef.current.triggerAttackRelease("C3", "8n", time);
+
       step = (step + 1) % 16;
     }, "16n");
 
