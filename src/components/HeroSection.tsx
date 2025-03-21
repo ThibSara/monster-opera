@@ -31,19 +31,22 @@ export default function Example() {
         {/* Monsters Section */}
         <div className="flex flex-row justify-center justify-between items-center space-x-6">
           <Monster
-            primaryColor="#C4D6B2"
-            secondaryColor="#80AF93"
-            splineScene="aa"
+            primaryColor="#CBDABA"
+            secondaryColor="#99B99B"
+            tertiaryColor="#88B398"
+            name="green"
           />
           <Monster
             primaryColor="#C3ACE7"
             secondaryColor="#9198EE"
-            splineScene="aa"
+            tertiaryColor="#6C72D2"
+            name="blue"
           />
           <Monster
             primaryColor="#EFC3B5"
             secondaryColor="#F19DD3"
-            splineScene="aa"
+            tertiaryColor="#E875C3"
+            name="purple"
           />
         </div>
 
