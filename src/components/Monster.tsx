@@ -162,10 +162,10 @@ const Monster = ({
         </div>
       </div>
 
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-row items-center gap-4 mt-4">
         <button
           onClick={toggleSingingMonster}
-          className={`mt-6 px-3 py-3 rounded-full flex ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-transform duration-200 transform hover:scale-105 items-center justify-center`}
+          className={` px-3 py-3 rounded-full flex ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-transform duration-200 transform hover:scale-105 items-center justify-center`}
           disabled={!isLoaded}
         >
           <PlayIcon
@@ -176,7 +176,7 @@ const Monster = ({
         </button>
         <button
           onClick={changeScene}
-          className={`mt-6 px-3 py-3 rounded-full flex ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-transform duration-200 transform hover:scale-105 items-center justify-center`}
+          className={` px-3 py-3 rounded-full flex ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-transform duration-200 transform hover:scale-105 items-center justify-center`}
         >
           <UserIcon className="w-6 h-6 text-gray-300" />
         </button>

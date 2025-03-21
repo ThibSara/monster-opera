@@ -172,7 +172,7 @@ const StepSequencer = () => {
         </div>
       </div>
 
-      <div className="flex flex-row items-center justify-between w-full max-w-[860px] mx-auto gap-6 mt-6">
+      <div className="flex flex-row justify-between w-full max-w-[860px] mx-auto gap-6 ">
         <div className="flex flex-row items-center gap-4">
           <button
             onClick={isPlaying ? stopSequencer : startSequencer}

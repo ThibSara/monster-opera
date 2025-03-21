@@ -5,7 +5,7 @@ import Monster from "./Monster";
 export default function Example() {
   return (
     <div className="">
-      <header className="absolute inset-x-0 top-0 z-50 ">
+      <header className=" z-50 ">
         <nav
           aria-label="Global"
           className="flex items-center justify-between p-8 lg:px-12"
@@ -27,7 +27,7 @@ export default function Example() {
           </div>
         </nav>
       </header>
-      <div className="min-h-[calc(100vh-48px)]  relative isolate flex flex-col justify-center px-8 lg:px-12 mt-12">
+      <div className="min-h-[calc(100vh-70px)]  relative isolate flex flex-col justify-center px-8 lg:px-12">
         {/* Monsters Section */}
         <div className="flex flex-row justify-center justify-between items-center space-x-6">
           <Monster

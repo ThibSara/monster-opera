@@ -3,7 +3,7 @@ import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
   return (
-    <div>
+    <div className="max-w-6xl mx-auto">
       <HeroSection />
       <StepSequencer />
     </div>
