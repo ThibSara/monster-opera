@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Spline from "@splinetool/react-spline";
 import * as Tone from "tone";
 import { PlayIcon, UserIcon } from "@heroicons/react/24/solid";
@@ -76,7 +76,16 @@ const Monster = ({
   const [currentMonsterIndex, setCurrentMonsterIndex] = useState(
     MonstersData.findIndex((monster) => monster.name === name) || 0
   );
-  const synthRef = useRef(new Tone.Synth().toDestination());
+
+  const synthRef = useRef<Tone.Synth | null>(null);
+
+  useEffect(() => {
+    synthRef.current = new Tone.Synth().toDestination();
+
+    return () => {
+      synthRef.current?.dispose();
+    };
+  }, []);
 
   const currentMonster = MonstersData[currentMonsterIndex];
   if (!currentMonster) return null;
@@ -84,7 +93,9 @@ const Monster = ({
   const startSinging = async () => {
     if (!isSinging) {
       await Tone.start();
-      synthRef.current.dispose();
+      if (synthRef.current) {
+        synthRef.current.dispose();
+      }
       synthRef.current = new Tone.Synth().toDestination();
       synthRef.current.triggerAttack(currentMonster.note);
       setIsSinging(true);
@@ -92,7 +103,9 @@ const Monster = ({
   };
 
   const stopSinging = () => {
-    synthRef.current.triggerRelease();
+    if (synthRef.current) {
+      synthRef.current.triggerRelease();
+    }
     setIsSinging(false);
   };
 

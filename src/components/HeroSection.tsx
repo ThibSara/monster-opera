@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Monster from "./Monster";
 
 export default function Example() {
   return (
@@ -28,7 +29,26 @@ export default function Example() {
       </header>
       <div className="min-h-[calc(100vh-48px)]  relative isolate flex flex-col justify-center px-8 lg:px-12 mt-12">
         {/* Monsters Section */}
-        <div className="flex flex-row justify-center justify-between items-center space-x-6"></div>
+        <div className="flex flex-row justify-center justify-between items-center space-x-6">
+          <Monster
+            primaryColor="#CBDABA"
+            secondaryColor="#99B99B"
+            tertiaryColor="#88B398"
+            name="green"
+          />
+          <Monster
+            primaryColor="#C3ACE7"
+            secondaryColor="#9198EE"
+            tertiaryColor="#6C72D2"
+            name="blue"
+          />
+          <Monster
+            primaryColor="#EFC3B5"
+            secondaryColor="#F19DD3"
+            tertiaryColor="#E875C3"
+            name="purple"
+          />
+        </div>
 
         {/* Announcement Section */}
         <div className="mt-16 flex justify-center flex-col items-center space-y-4">
