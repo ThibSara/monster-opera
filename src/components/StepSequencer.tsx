@@ -106,9 +106,7 @@ const StepSequencer = () => {
               key={`kick-${index}`}
               onClick={() => toggleBeat(setKickSequence, index)}
               className={`w-10 h-10 rounded-md transition hover:scale-110 ${
-                beat
-                  ? "bg-blue-500 shadow-lg shadow-blue-500/50"
-                  : "bg-gray-200"
+                beat ? "bg-red-400 shadow-lg shadow-red-400/50" : "bg-gray-200"
               } ${index === currentStep ? "scale-110" : ""}`}
             />
           ))}
