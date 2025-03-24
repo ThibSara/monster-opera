@@ -42,7 +42,7 @@ const MonstersData = [
     note: "D4",
   },
   {
-    name: "orange",
+    name: "light-blue",
     splineScene: "https://prod.spline.design/23hMdeQMRSlQ3qpj/scene.splinecode",
     note: "C2",
   },
