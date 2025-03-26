@@ -1,36 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎭 Monster Opera – A Playful Singing Experiment 🎶  
 
-## Getting Started
+Hey devs! 👋  
 
-First, run the development server:
+I just launched **Monster Opera** – a fun little web experiment where you can create your own **singing monster choir!** 🎤  
+I wanted to build something **playful and UX-friendly**, making it easy and enjoyable to interact with.  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🪇 Tech Stack  
+- 🚀 **Next.js** – for the frontend  
+- 🎨 **Spline** – for interactive 3D models  
+- 🎵 **Tone.js** – to handle sound generation  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 💡 Why I Built This  
+I wanted to merge **playfulness, music, and interactive web design** into an experience that's:  
+**Simple** – no learning curve, just fun!  
+**Intuitive** – easy to use with a smooth UI  
+**Creative** – experiment with sounds and visuals  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+🎶 **Try it out here 👉 [Monster Opera](https://monster-opera.vercel.app/)**  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
